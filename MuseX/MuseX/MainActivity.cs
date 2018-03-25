@@ -18,7 +18,7 @@ namespace MuseX
         public Boolean recording = false;
         public Sequence notes;
         AudioRecord audRecorder;
-        public static int SAMPLE_RATE = 11025;
+        public static int SAMPLE_RATE = 48000;
 
         protected override void OnCreate(Bundle savedInstanceState)
         {
@@ -59,7 +59,7 @@ namespace MuseX
         {
             EditText bpm = FindViewById<EditText>(Resource.Id.bpm);
             double bufferTimeInSeconds = (60.0/(Int32.Parse(bpm.Text)))/4; //16th note is shortest possible subdivision atm
-            int bufferSize = (int)(Math.Ceiling(bufferTimeInSeconds * 2 * SAMPLE_RATE) + 0.5);
+            int bufferSize = (int)(bufferTimeInSeconds * 2 * SAMPLE_RATE + 0.5);
 
             //Start buffer
             short[] audioBuffer = new short[bufferSize];
@@ -78,7 +78,7 @@ namespace MuseX
 
             TextView debug = FindViewById<TextView>(Resource.Id.debugText);
             audRecorder.StartRecording();
-            debug.Text = bufferTimeInSeconds + ", " + bufferSize + ", "+ audRecorder.Read(audioBuffer, 0, audioBuffer.Length);
+            debug.Text = bufferTimeInSeconds + ", " + SAMPLE_RATE + ", "+ audRecorder.Read(audioBuffer, 0, audioBuffer.Length);
             ProcessBuffer(audioBuffer);
             /*
             Thread.CurrentThread.IsBackground = true;
